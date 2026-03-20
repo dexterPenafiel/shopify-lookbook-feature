@@ -1,0 +1,14 @@
+.lookbook-container h2 span {
+    display: block;
+    font-size: 14px;
+}
+
+.lookbook-container h2 {
+    margin-bottom: 15px;
+}
+
+.lookbook-container .lb_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}

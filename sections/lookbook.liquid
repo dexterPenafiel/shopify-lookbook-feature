@@ -1,0 +1,63 @@
+<div class="page-width lookbook-wrap">
+  {%- for lookbook in shop.metaobjects.lookbook.values -%}
+    
+    {%- assign is_part_of_lookbook = false -%}
+
+    {%- comment -%} this is to check if the current product belongs to a lookbook that will be display {%- endcomment -%}
+    {%- for lb_item in lookbook.products.value -%}
+      {%- if lb_item.handle == product.handle -%}
+        {%- assign is_part_of_lookbook = true -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if is_part_of_lookbook -%}
+      <div class="lookbook-container" style="margin: 50px 0; padding: 30px; border: 1px solid #e8e8e8; background: #fff;">
+        <h2 style="text-align: center; text-transform: uppercase;"><span>Lookbook</span>{{ lookbook.title }}</h2>
+        <div class="rte" style="text-align: center; margin-bottom: 30px;">
+            {%- assign desc = lookbook.description.value -%}
+            {%- for block in desc.children -%}
+              {%- if block.type == 'paragraph' -%}
+                  <p>
+                  {%- for child in block.children -%}
+                      {{ child.value }}
+                  {%- endfor -%}
+                  </p>
+              {%- endif -%}
+            {%- endfor -%}
+        </div>
+        
+        <div class="lb_grid">
+          {%- for lb_product in lookbook.products.value -%}
+            <div class="lookbook-card" style="text-align: center;">
+              <a href="{{ lb_product.url }}" style="text-decoration: none; color: inherit;">
+                <img src="{{ lb_product.featured_image | image_url: width: 400 }}" 
+                     alt="{{ lb_product.title }}" 
+                     style="width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 4px;">
+                <h3 style="font-size: 1.1rem; margin: 10px 0 5px;">{{ lb_product.title }}</h3>
+                <p style="font-weight: bold;">{{ lb_product.price | money }}</p>
+              </a>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+</div>
+{%- comment -%}on schema i added enable_on just to make sure that this section will only display on a PDP{%- endcomment -%}
+{% schema %}
+{
+  "name": "Lookbook Context",
+  "tag": "section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "presets": [
+    {
+      "name": "Lookbook Context"
+    }
+  ]
+}
+{% endschema %}

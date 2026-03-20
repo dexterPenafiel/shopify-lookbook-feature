@@ -1,0 +1,63 @@
+{%- comment -%} 
+  this section can be used on other pages just by adding section Lookbook Display
+{%- endcomment -%}
+{%- assign handle = section.settings.selected_lookbook -%}
+{%- assign selected_lookbook = shop.metaobjects.lookbook[handle] -%}
+
+{%- if selected_lookbook != blank -%}
+  <div class="page-width lookbook-wrap">
+    <div class="lookbook-container" style="margin: 50px 0; padding: 30px; border: 1px solid #e8e8e8; background: #fff;">
+      
+      <h2 style="text-align: center; text-transform: uppercase;"><span>Lookbook</span>{{ selected_lookbook.title }}</h2>
+      
+      <div class="rte" style="text-align: center; margin-bottom: 30px;">
+          {%- assign desc = selected_lookbook.description.value -%}
+          {%- for block in desc.children -%}
+            {%- if block.type == 'paragraph' -%}
+                <p>
+                {%- for child in block.children -%}
+                    {{ child.value }}
+                {%- endfor -%}
+                </p>
+            {%- endif -%}
+          {%- endfor -%}
+      </div>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+        {%- for lb_product in selected_lookbook.products.value -%}
+          <div class="lookbook-card" style="text-align: center;">
+            <a href="{{ lb_product.url }}" style="text-decoration: none; color: inherit;">
+              <img src="{{ lb_product.featured_image | image_url: width: 400 }}" 
+                   alt="{{ lb_product.title }}" 
+                   style="width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 4px;">
+              <h3 style="font-size: 1.1rem; margin: 10px 0 5px;">{{ lb_product.title }}</h3>
+              <p style="font-weight: bold;">{{ lb_product.price | money }}</p>
+            </a>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+{%- else -%}
+  <div class="page-width center" style="padding: 40px; border: 1px dashed #ccc; text-align: center;">
+    <p>Please select a Lookbook in the section settings to display content.</p>
+    <p><small>Debug Info: Handle found was "{{ handle }}"</small></p>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Lookbook Display",
+  "settings": [
+    {
+      "type": "metaobject",
+      "id": "selected_lookbook",
+      "label": "Select Lookbook",
+      "metaobject_type": "lookbook"
+    }
+  ],
+  "presets": [
+    { "name": "Lookbook Display" }
+  ]
+}
+{% endschema %}
